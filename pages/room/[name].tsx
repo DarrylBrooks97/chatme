@@ -1,4 +1,5 @@
 import { GetServerSidePropsContext } from "next";
+import { KeyboardEventHandler, useState } from "react";
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -16,18 +17,50 @@ export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
 };
 
 const ChatRoom = (props: { roomName: string }) => {
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState<string[]>([]);
+
+  const handleEnter = (e: any) => {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      addMessage();
+    }
+  };
+  const addMessage = () => {
+    setMessages((old) => [...old, newMessage]);
+  };
+
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
-      <div className="flex flex-col p-20">
-        <p className="text-white text-xl pb-5">
-          You made it to: {props.roomName} chat room
+      <div className="flex flex-col w-4/5">
+        <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
+          {props.roomName} chat room
         </p>
         <div className="py-10 bg-white rounded-lg">
-          <p>Messages</p>
+          {messages.map((message) => (
+            <div className="flex p-3 border-b-2 ">
+              <div className="rounded-full overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
+                  alt={`avatar with ${message}`}
+                  className="w-[50px] h-[50px] "
+                />
+              </div>
+              <div className="w-full self-center">
+                <p className="text-gray-800 text-sm  ml-3">{message}</p>
+              </div>
+            </div>
+          ))}
         </div>
         <div className="flex items-end p-3 mx-auto">
-          <input type="text" className="p-2 mr-3 border-2 rounded-md" />
-          <button className="p-2 rounded-md bg-white">Send</button>
+          <input
+            type="text"
+            className="p-2 mr-3 border-2 rounded-md"
+            onKeyDown={handleEnter}
+            onChange={(e) => setNewMessage(e.currentTarget.value)}
+          />
+          <button className="p-2 rounded-md bg-white" onClick={addMessage}>
+            Send
+          </button>
         </div>
       </div>
     </div>
