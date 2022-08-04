@@ -1,5 +1,8 @@
 import { GetServerSidePropsContext } from "next";
-import { KeyboardEventHandler, useState } from "react";
+import { useEffect, useState } from "react";
+import { pusher } from "@clients/pusher";
+
+let roomClient: any;
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -26,8 +29,21 @@ const ChatRoom = (props: { roomName: string }) => {
     }
   };
   const addMessage = () => {
+    roomClient.trigger("new-message", { message: newMessage });
     setMessages((old) => [...old, newMessage]);
   };
+
+  useEffect(() => {
+    roomClient = pusher.subscribe(props.roomName);
+    roomClient.bind("new-message", (data: any) => {
+      setMessages((old) => [...old, data.message]);
+    });
+    console.log("subscribed to room");
+
+    return () => {
+      pusher.unsubscribe(props.roomName);
+    };
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
