@@ -1,8 +1,9 @@
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
-import { pusher } from "@clients/pusher";
+import { PusherClient } from "@clients/pusher";
+import { Channel } from "pusher-js";
 
-let roomClient: any;
+let roomClient: Channel | null = null;
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -28,20 +29,33 @@ const ChatRoom = (props: { roomName: string }) => {
       addMessage();
     }
   };
-  const addMessage = () => {
-    roomClient.trigger("new-message", { message: newMessage });
-    setMessages((old) => [...old, newMessage]);
+  const addMessage = async() => {
+    const resp = await fetch('/api/chat/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        roomName: props.roomName,
+        message: newMessage
+      })
+    })
+
+    if(!resp.ok){
+      alert('Error sending message');
+      return;
+    }
+
   };
 
   useEffect(() => {
-    roomClient = pusher.subscribe(props.roomName);
+    roomClient = PusherClient.subscribe(props.roomName);
     roomClient.bind("new-message", (data: any) => {
-      setMessages((old) => [...old, data.message]);
+      setMessages(data)
     });
-    console.log("subscribed to room");
-
+    
     return () => {
-      pusher.unsubscribe(props.roomName);
+      PusherClient.unsubscribe(props.roomName);
     };
   }, []);
 

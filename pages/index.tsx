@@ -19,7 +19,7 @@ const Index: NextPage = () => {
           <form action="POST" onSubmit={submitRoom}>
             <input name="roomName" className="rounded-md p-3 mr-3" />
             <button
-              className="rounded-md bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-md"
+              className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-md"
               type="submit"
             >
               Go
