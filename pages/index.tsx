@@ -1,9 +1,7 @@
 import type { NextPage } from "next";
-import { FormEvent } from "react";
 
 const Index: NextPage = () => {
   const submitRoom = (e: any) => {
-    //get form data
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get("roomName");
