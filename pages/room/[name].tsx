@@ -1,8 +1,8 @@
+import { Channel } from 'pusher-js';
 import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
-import { Channel } from 'pusher-js';
 
 let roomClient: Channel | null = null;
 
@@ -103,12 +103,12 @@ const ChatRoom = (props: { roomName: string }) => {
         <div className="flex items-end p-3 mx-auto">
           <input
             type="text"
-            className="p-2 mr-3 border-2 rounded-md"
+            className="p-2 mr-3 border-2 w-full mx-auto rounded-md"
             onKeyDown={handleEnter}
             value={newMessage}
             onChange={e => setNewMessage(e.currentTarget.value)}
           />
-          <button className="p-2 rounded-md bg-green-700" onClick={addMessage}>
+          <button className="p-2 rounded-md bg-green-700 text-white" onClick={addMessage}>
             Send
           </button>
         </div>
