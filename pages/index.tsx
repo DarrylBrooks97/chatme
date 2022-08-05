@@ -1,11 +1,11 @@
-import type { NextPage } from "next";
+import type { NextPage } from 'next';
 
 const Index: NextPage = () => {
   const submitRoom = (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const name = formData.get("roomName");
-    window.location.href = `/room/${name}`;
+    const name = formData.get('roomName');
+    window.location.href = `/room/${name?.toString().toLowerCase().trim()}`;
   };
 
   return (
