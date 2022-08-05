@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
-import { PusherClient } from "@clients/pusher";
+import { pusher } from "@clients/pusher";
 import { Channel } from "pusher-js";
 
 let roomClient: Channel | null = null;
@@ -49,13 +49,12 @@ const ChatRoom = (props: { roomName: string }) => {
   };
 
   useEffect(() => {
-    roomClient = PusherClient.subscribe(props.roomName);
+    roomClient = pusher.subscribe(props.roomName);
     roomClient.bind("new-message", (data: any) => {
-      setMessages(data)
+      setMessages(prev => [...prev, data.message]);
     });
-    
     return () => {
-      PusherClient.unsubscribe(props.roomName);
+      pusher.unsubscribe(props.roomName);
     };
   }, []);
 
@@ -66,7 +65,7 @@ const ChatRoom = (props: { roomName: string }) => {
           {props.roomName} chat room
         </p>
         <div className="py-10 bg-white rounded-lg">
-          {messages.map((message) => (
+          {messages?.map((message) => (
             <div className="flex p-3 border-b-2 ">
               <div className="rounded-full overflow-hidden">
                 <img
