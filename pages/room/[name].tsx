@@ -76,8 +76,8 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
       <div className="flex flex-col w-full md:w-4/5 max-w-xl">
-        <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
-          {roomName} chat room
+        <p className=" font-semibold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500  pb-5 text-center">
+          Welcome to {roomName} room !
         </p>
         <div className="flex">
           <div className="h-[10px] w-[10px] bg-green-300 rounded-full animate-ping self-center" />
