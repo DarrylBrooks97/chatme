@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "date-fns": "^2.29.1",
     "next": "12.2.3",
     "pusher": "^5.1.1-beta",
     "pusher-js": "^7.3.0",

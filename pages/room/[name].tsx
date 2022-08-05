@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
+import { formatDistanceToNow } from 'date-fns';
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -13,10 +14,14 @@ export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
     },
   };
 };
+export interface RoomMessage {
+  message: string;
+  time: string;
+}
 
 const ChatRoom = (props: { roomName: string }) => {
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<RoomMessage[]>([]);
 
   const handleEnter = (e: any) => {
     if (e.key === 'Enter' || e.keyCode === 13) {
@@ -43,7 +48,7 @@ const ChatRoom = (props: { roomName: string }) => {
 
   useEffect(() => {
     joinRoom(props.roomName, data => {
-      setMessages(prevMessages => [...prevMessages, data.message]);
+      setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
 
@@ -52,10 +57,9 @@ const ChatRoom = (props: { roomName: string }) => {
     };
   }, []);
 
-  console.log({ messages });
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
-      <div className="flex flex-col w-4/5">
+      <div className="flex flex-col w-4/5 min-w-2xl">
         <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
           {props.roomName} chat room
         </p>
@@ -70,7 +74,10 @@ const ChatRoom = (props: { roomName: string }) => {
                 />
               </div>
               <div className="w-full self-center">
-                <p className="text-gray-800 text-sm  ml-3">{message}</p>
+                <p className="text-gray-800 text-sm  ml-3">{message.message}</p>
+                <time className="text-xs text-gray-500 float-right">
+                  {formatDistanceToNow(new Date(message.time))} ago
+                </time>
               </div>
             </div>
           ))}
