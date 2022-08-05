@@ -1,17 +1,11 @@
-import { GetServerSidePropsContext } from "next";
-import { useEffect, useState } from "react";
-import { pusher } from "@clients/pusher";
-import { Channel } from "pusher-js";
-
-let roomClient: Channel | null = null;
+import { GetServerSidePropsContext } from 'next';
+import { useEffect, useState } from 'react';
+import { joinRoom, leaveRoom } from 'hooks/channel';
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59"
-  );
+  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
   return {
     props: {
@@ -21,43 +15,44 @@ export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
 };
 
 const ChatRoom = (props: { roomName: string }) => {
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
 
   const handleEnter = (e: any) => {
-    if (e.key === "Enter" || e.keyCode === 13) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
       addMessage();
     }
   };
-  const addMessage = async() => {
+  const addMessage = async () => {
     const resp = await fetch('/api/chat/add', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         roomName: props.roomName,
-        message: newMessage
-      })
-    })
+        message: newMessage,
+      }),
+    });
 
-    if(!resp.ok){
+    if (!resp.ok) {
       alert('Error sending message');
       return;
     }
-
   };
 
   useEffect(() => {
-    roomClient = pusher.subscribe(props.roomName);
-    roomClient.bind("new-message", (data: any) => {
-      setMessages(prev => [...prev, data.message]);
+    joinRoom(props.roomName, data => {
+      setMessages(prevMessages => [...prevMessages, data.message]);
+      setNewMessage('');
     });
+
     return () => {
-      pusher.unsubscribe(props.roomName);
+      leaveRoom(props.roomName);
     };
   }, []);
 
+  console.log({ messages });
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
       <div className="flex flex-col w-4/5">
@@ -65,7 +60,7 @@ const ChatRoom = (props: { roomName: string }) => {
           {props.roomName} chat room
         </p>
         <div className="py-10 bg-white rounded-lg">
-          {messages?.map((message) => (
+          {messages?.map(message => (
             <div className="flex p-3 border-b-2 ">
               <div className="rounded-full overflow-hidden">
                 <img
@@ -85,7 +80,8 @@ const ChatRoom = (props: { roomName: string }) => {
             type="text"
             className="p-2 mr-3 border-2 rounded-md"
             onKeyDown={handleEnter}
-            onChange={(e) => setNewMessage(e.currentTarget.value)}
+            value={newMessage}
+            onChange={e => setNewMessage(e.currentTarget.value)}
           />
           <button className="p-2 rounded-md bg-white" onClick={addMessage}>
             Send
