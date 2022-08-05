@@ -63,8 +63,6 @@ const ChatRoom = (props: { roomName: string }) => {
     };
   }, []);
 
-  console.log({ count: roomClient?.subscriptionCount });
-
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
       <div className="flex flex-col w-full md:w-4/5 max-w-xl">
@@ -78,8 +76,11 @@ const ChatRoom = (props: { roomName: string }) => {
         <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
           {props.roomName} chat room
         </p>
-        <p className="text-white">{roomClient?.subscriptionCount} online</p>
-        <div className="py-10 bg-white rounded-lg">
+        <div className="flex">
+          <div className="h-[10px] w-[10px] bg-green-300 rounded-full animate-ping self-center" />
+          <p className="text-white ml-3">{roomClient?.subscriptionCount} online</p>
+        </div>
+        <div className=" bg-white rounded-lg overflow-y-scroll h-96">
           {messages?.map(message => (
             <div className="flex p-3 border-b-2" key={message.time}>
               <div className="rounded-full h-[50px] overflow-hidden">
