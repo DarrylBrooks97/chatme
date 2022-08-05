@@ -2,6 +2,9 @@ import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
+import { Channel } from 'pusher-js';
+
+let roomClient: Channel | null = null;
 
 export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -15,6 +18,8 @@ export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
   };
 };
 export interface RoomMessage {
+  userName: string;
+  avatar?: string;
   message: string;
   time: string;
 }
@@ -37,6 +42,7 @@ const ChatRoom = (props: { roomName: string }) => {
       body: JSON.stringify({
         roomName: props.roomName,
         message: newMessage,
+        userName: 'apxflex',
       }),
     });
 
@@ -47,7 +53,7 @@ const ChatRoom = (props: { roomName: string }) => {
   };
 
   useEffect(() => {
-    joinRoom(props.roomName, data => {
+    roomClient = joinRoom(props.roomName, data => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
@@ -56,6 +62,8 @@ const ChatRoom = (props: { roomName: string }) => {
       leaveRoom(props.roomName);
     };
   }, []);
+
+  console.log({ count: roomClient?.subscriptionCount });
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
@@ -70,6 +78,7 @@ const ChatRoom = (props: { roomName: string }) => {
         <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
           {props.roomName} chat room
         </p>
+        <p className="text-white">{roomClient?.subscriptionCount} online</p>
         <div className="py-10 bg-white rounded-lg">
           {messages?.map(message => (
             <div className="flex p-3 border-b-2" key={message.time}>
@@ -81,6 +90,7 @@ const ChatRoom = (props: { roomName: string }) => {
                 />
               </div>
               <div className="w-full self-center">
+                <p className="text-sm text-purple-500 ml-3">@{message.userName}</p>
                 <p className="text-gray-800 text-sm  ml-3">{message.message}</p>
                 <time className="text-xs text-gray-500 float-right">
                   {formatDistanceToNow(new Date(message.time))} ago

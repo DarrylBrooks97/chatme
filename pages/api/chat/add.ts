@@ -16,10 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     cluster: process.env.PUSHER_CLUSTER as string,
   });
 
-  const { roomName, message } = body;
+  const { roomName, message, userName } = body;
 
-  const r = await pusher.trigger(roomName, 'new-message', {
+  const r = await pusher?.trigger(`cache-${roomName}`, 'new-message', {
     message,
+    userName,
     time: new Date().toISOString(),
   });
 
