@@ -90,10 +90,16 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
                 <img
                   src={user.user_metadata['avatar_url']}
                   alt={`avatar @ ${message.time}`}
-                  className="w-[50px] h-[50px] "
+                  className="w-[50px] h-[50px]"
+                  onClick={() =>
+                    window.open(
+                      `https://twitter.com/${user.user_metadata['preferred_username']}`,
+                      '_blank',
+                    )
+                  }
                 />
               </div>
-              <div className="w-full self-center">
+              <div className="w-full break-words self-center">
                 <p className="text-sm text-purple-500 ml-3">@{message.userName}</p>
                 <p className="text-gray-800 text-sm  ml-3">{message.message}</p>
                 <time className="text-xs text-gray-500 float-right">
