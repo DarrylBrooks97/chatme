@@ -3,16 +3,25 @@ import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
+import { getUser, User } from '@supabase/auth-helpers-nextjs';
 
 let roomClient: Channel | null = null;
 
-export const getServerSideProps = (ctx: GetServerSidePropsContext) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
+  const { user } = await getUser(ctx);
 
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+  if (!user) {
+    res.writeHead(302, {
+      Location: '/',
+    });
+    res.end();
+    return { props: { roomName: null } };
+  }
 
   return {
     props: {
+      user,
       roomName: query.name,
     },
   };
@@ -24,7 +33,8 @@ export interface RoomMessage {
   time: string;
 }
 
-const ChatRoom = (props: { roomName: string }) => {
+const ChatRoom = (props: { user: User; roomName: string }) => {
+  const { user, roomName } = props;
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<RoomMessage[]>([]);
 
@@ -42,7 +52,7 @@ const ChatRoom = (props: { roomName: string }) => {
       body: JSON.stringify({
         roomName: props.roomName,
         message: newMessage,
-        userName: 'apxflex',
+        userName: user.user_metadata['preferred_username'],
       }),
     });
 
@@ -53,28 +63,21 @@ const ChatRoom = (props: { roomName: string }) => {
   };
 
   useEffect(() => {
-    roomClient = joinRoom(props.roomName, data => {
+    roomClient = joinRoom(roomName, data => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
 
     return () => {
-      leaveRoom(props.roomName);
+      leaveRoom(roomName);
     };
   }, []);
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
       <div className="flex flex-col w-full md:w-4/5 max-w-xl">
-        <button
-          className="absolute top-2 left-2 rounded-md bg-white px-3 py-2"
-          tabIndex={1}
-          onClick={() => (window.location.href = '/')}
-        >
-          Back
-        </button>
         <p className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500 text-xl pb-5 text-center">
-          {props.roomName} chat room
+          {roomName} chat room
         </p>
         <div className="flex">
           <div className="h-[10px] w-[10px] bg-green-300 rounded-full animate-ping self-center" />
@@ -85,7 +88,7 @@ const ChatRoom = (props: { roomName: string }) => {
             <div className="flex p-3 border-b-2" key={message.time}>
               <div className="rounded-full h-[50px] overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
+                  src={user.user_metadata['avatar_url']}
                   alt={`avatar @ ${message.time}`}
                   className="w-[50px] h-[50px] "
                 />
