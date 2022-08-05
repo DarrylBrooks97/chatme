@@ -1,10 +1,14 @@
 import Pusher from 'pusher';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const allowedOrigins = ['https://chatme-xi.vercel.app/', 'http://localhost:3000/'];
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { body, method, headers } = req;
+  const { roomName, message, userName } = body;
+
+  const allowedOrigins = [
+    `https://chatme-xi.vercel.app/room/${roomName}`,
+    'http://localhost:3000/',
+  ];
 
   if (
     !allowedOrigins.includes(headers.origin as string) &&
@@ -28,8 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     secret: process.env.PUSHER_API_KEY_SECRET as string,
     cluster: process.env.PUSHER_CLUSTER as string,
   });
-
-  const { roomName, message, userName } = body;
 
   const r = await pusher?.trigger(`cache-${roomName}`, 'new-message', {
     message,
