@@ -73,7 +73,7 @@ const ChatRoom = (props: { roomName: string }) => {
         <div className="py-10 bg-white rounded-lg">
           {messages?.map(message => (
             <div className="flex p-3 border-b-2" key={message.time}>
-              <div className="rounded-full overflow-hidden">
+              <div className="rounded-full h-[50px] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80"
                   alt={`avatar @ ${message.time}`}
