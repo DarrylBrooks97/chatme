@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { roomName, message, userName } = body;
 
   const allowedOrigins = [
-    `https://chatme-xi.vercel.app/room/${roomName}`,
+    `https://chatme-xi.vercel.app/api/room/${roomName}`,
     'http://localhost:3000/',
   ];
 
