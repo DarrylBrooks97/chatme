@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           description: 'A quick chat app to talk to friends, family, and randoms in real time.',
           images: [
             {
-              url: 'https://chatme-xi.vercel.app//SEO.png',
+              url: 'https://chatme-xi.vercel.app/SEO.png',
               width: 800,
               height: 450,
               alt: 'Chatme',
