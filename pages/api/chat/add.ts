@@ -1,8 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import Pusher from 'pusher';
+import { NextApiRequest, NextApiResponse } from 'next';
+
+const allowedOrigins = ['https://chatme-xi.vercel.app/', 'http://localhost:3000/'];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { body, method } = req;
+  const { body, method, headers } = req;
+
+  if (
+    !allowedOrigins.includes(headers.origin as string) &&
+    process.env.NODE_ENV !== 'development'
+  ) {
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.status(403).json({
+      error: 'Forbidden',
+    });
+    return;
+  }
 
   if (method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
