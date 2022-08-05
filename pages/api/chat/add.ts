@@ -14,6 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     !allowedOrigins.includes(headers.origin as string) &&
     process.env.NODE_ENV !== 'development'
   ) {
+    console.log({ origin: headers.origin });
+
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.status(403).json({
       error: 'Forbidden',
