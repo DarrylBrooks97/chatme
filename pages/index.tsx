@@ -14,8 +14,14 @@ const Index: NextPage = () => {
       doc!.style.display = 'block';
       return;
     }
+
     const formData = new FormData(e.currentTarget);
     const name = formData.get('roomName');
+
+    if (name === '') {
+      return;
+    }
+
     window.location.href = `/room/${name?.toString().toLowerCase().trim()}`;
   };
 
