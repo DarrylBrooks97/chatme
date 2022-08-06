@@ -10,7 +10,8 @@ function startInactivityCheck() {
   timeoutId = window.setTimeout(function () {
     console.log('inactivity detected');
     pusher.disconnect();
-  }, 2 * 60 * 1000); // called after 5 minutes
+    window.location.href = '/';
+  }, 3 * 60 * 1000); // called after 3 minutes
 }
 
 // called by something that detects user activity
