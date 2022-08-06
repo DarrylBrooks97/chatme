@@ -28,7 +28,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 export interface RoomMessage {
   userName: string;
-  avatar?: string;
+  avatar: string;
   message: string;
   time: string;
 }
@@ -52,7 +52,8 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
       body: JSON.stringify({
         roomName: props.roomName,
         message: newMessage,
-        userName: user.user_metadata['preferred_username'],
+        userName: user.user_metadata['avatar_url'],
+        avatar: user.user_metadata[''],
       }),
     });
 
@@ -71,7 +72,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
     return () => {
       leaveRoom(roomName);
     };
-  }, []);
+  }, [roomClient?.subscribed]);
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
@@ -88,7 +89,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
             <div className="flex p-3 border-b-2" key={message.time}>
               <div className="rounded-full h-[50px] overflow-hidden">
                 <img
-                  src={user.user_metadata['avatar_url']}
+                  src={message.avatar}
                   alt={`avatar @ ${message.time}`}
                   className="w-[50px] h-[50px]"
                   onClick={() =>

@@ -1,21 +1,15 @@
 import Pusher from 'pusher';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+const allowedOrigins = [`https://chatme-xi.vercel.app`, 'http://localhost:3000/'];
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { body, method, headers } = req;
-  const { roomName, message, userName } = body;
-
-  const allowedOrigins = [
-    `https://chatme-xi.vercel.app/api/room/${roomName}`,
-    'http://localhost:3000/',
-  ];
 
   if (
     !allowedOrigins.includes(headers.origin as string) &&
     process.env.NODE_ENV !== 'development'
   ) {
-    console.log({ origin: headers.origin });
-
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.status(403).json({
       error: 'Forbidden',
@@ -35,9 +29,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     cluster: process.env.PUSHER_CLUSTER as string,
   });
 
+  const { roomName, message, userName, avatar } = body;
+
   const r = await pusher?.trigger(`cache-${roomName}`, 'new-message', {
     message,
     userName,
+    avatar,
     time: new Date().toISOString(),
   });
 
