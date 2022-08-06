@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
+import { userActivityDetected } from '@clients/pusher';
 
 let roomClient: PresenceChannel | null = null;
 
@@ -61,6 +62,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
       alert('Error sending message');
       return;
     }
+    userActivityDetected();
   };
 
   useEffect(() => {
