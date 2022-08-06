@@ -117,7 +117,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
         <div className="flex items-end p-3 mx-auto">
           <input
             type="text"
-            className="p-2 mr-3 border-2 w-full mx-auto rounded-md"
+            className="p-2 mr-3 border-2 w-full mx-auto rounded-md bg-white text-black"
             onKeyDown={handleEnter}
             value={newMessage}
             onChange={e => setNewMessage(e.currentTarget.value)}

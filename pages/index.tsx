@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { useUser } from '@supabase/auth-helpers-react';
 import { login } from 'hooks/supbase';
 import { useEffect } from 'react';
+import { pusher } from '@clients/pusher';
 
 const Index: NextPage = () => {
   const { user } = useUser();
@@ -24,7 +25,6 @@ const Index: NextPage = () => {
   }, []);
 
   return (
-    // <div className="">
     <div className="flex flex-col text-center">
       <h1 className="text-6xl p-1 font-bold text-transparent bg-clip-text animate-lightSpeed bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500 bg-[length:300%_100%]">
         Chat me
@@ -35,7 +35,7 @@ const Index: NextPage = () => {
       <div className="flex flex-col text-center p-3">
         <p className="text-white text-xl p-3">Pick a room to chat !</p>
         <form action="POST" onSubmit={submitRoom}>
-          <input name="roomName" className="rounded-md p-3 mr-3" />
+          <input name="roomName" className="rounded-md p-3 mr-3 bg-white text-black" />
           <button
             className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-md"
             type="submit"
@@ -50,8 +50,16 @@ const Index: NextPage = () => {
           Signin
         </button>
       </div>
+      {/* <div className="flex flex-col">
+        {channels.map(channel => (
+          <div className="flex p-3 border-b-2" key={channel.name}>
+            <div className="flex-1">
+              <p className="text-sm text-gray-600">{channel.name}</p>
+            </div>
+          </div>
+        ))}
+      </div> */}
     </div>
-    // </div>
   );
 };
 
