@@ -7,8 +7,8 @@ const login = async () => {
 };
 
 const signOut = async () => {
-  window.location.href = '/';
   await supabaseClient.auth.signOut();
+  window.location.href = '/';
   return;
 };
 
