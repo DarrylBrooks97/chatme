@@ -1,4 +1,5 @@
 import Header from '@components/Header';
+import Footer from '@components/Footer';
 import { useUser } from '@supabase/auth-helpers-react';
 
 const Layout = (props: { children: React.ReactNode }) => {
@@ -9,7 +10,7 @@ const Layout = (props: { children: React.ReactNode }) => {
       <main className="grow mx-auto flex justify-center items-center max-w-7xl">
         {props.children}
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };
