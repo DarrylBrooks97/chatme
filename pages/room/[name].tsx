@@ -52,8 +52,8 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
       body: JSON.stringify({
         roomName: props.roomName,
         message: newMessage,
-        userName: user.user_metadata['avatar_url'],
-        avatar: user.user_metadata[''],
+        userName: user.user_metadata['preferred_username'],
+        avatar: user.user_metadata['avatar_url'],
       }),
     });
 
@@ -72,7 +72,8 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
     return () => {
       leaveRoom(roomName);
     };
-  }, [roomClient?.subscribed]);
+  }, []);
+  console.log({ messages });
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">
