@@ -1,11 +1,11 @@
-import { Channel } from 'pusher-js';
+import { PresenceChannel } from 'pusher-js';
 import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
 
-let roomClient: Channel | null = null;
+let roomClient: PresenceChannel | null = null;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -72,8 +72,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
     return () => {
       leaveRoom(roomName);
     };
-  }, []);
-  console.log({ messages });
+  }, [roomClient?.subscriptionCount]);
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl p-3">

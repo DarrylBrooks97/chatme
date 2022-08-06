@@ -1,12 +1,27 @@
 import type { NextPage } from 'next';
+import { useUser } from '@supabase/auth-helpers-react';
+import { login } from 'hooks/supbase';
+import { useEffect } from 'react';
 
 const Index: NextPage = () => {
+  const { user } = useUser();
+
   const submitRoom = (e: any) => {
     e.preventDefault();
+    if (!user) {
+      const doc = document.getElementById('hidden-signin');
+      doc!.style.display = 'block';
+      return;
+    }
     const formData = new FormData(e.currentTarget);
     const name = formData.get('roomName');
     window.location.href = `/room/${name?.toString().toLowerCase().trim()}`;
   };
+
+  useEffect(() => {
+    const doc = document.getElementById('hidden-signin');
+    doc!.style.display = 'hidden';
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl">
@@ -28,6 +43,12 @@ const Index: NextPage = () => {
               Go
             </button>
           </form>
+        </div>
+        <div className="p-3 hidden" id="hidden-signin">
+          <p className="text-sm text-red-600 animate-bounce">Please sign in first</p>
+          <button className="py-3 px-4 bg-green-600 text-white rounded-md" onClick={login}>
+            Signin
+          </button>
         </div>
       </div>
     </div>
