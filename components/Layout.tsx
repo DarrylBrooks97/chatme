@@ -4,9 +4,11 @@ import { useUser } from '@supabase/auth-helpers-react';
 const Layout = (props: { children: React.ReactNode }) => {
   const { user } = useUser();
   return (
-    <div className="flex h-full min-h-screen w-screen flex-col">
+    <div className="flex flex-col min-h-screen w-screen">
       <Header user={user} />
-      <main>{props.children}</main>
+      <main className="grow mx-auto flex justify-center items-center max-w-7xl">
+        {props.children}
+      </main>
       {/* <Footer /> */}
     </div>
   );

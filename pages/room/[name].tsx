@@ -1,4 +1,4 @@
-import { PresenceChannel } from 'pusher-js';
+import { Channel } from 'pusher-js';
 import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
@@ -6,7 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
 import { userActivityDetected } from '@clients/pusher';
 
-let roomClient: PresenceChannel | null = null;
+let roomClient: Channel | null = null;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -70,16 +70,18 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
+    console.log({ roomClient });
 
     return () => {
       leaveRoom(roomName);
     };
-  }, [roomClient?.subscriptionCount]);
+  }, []);
+  // console.log({ s: roomClient });
 
   return (
-    <div className="flex justify-center items-center h-screen min-w-7xl p-3">
-      <div className="flex flex-col w-full md:w-4/5 max-w-xl">
-        <p className=" font-semibold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-blue-500  pb-5 text-center">
+    <div className="flex justify-center items-center">
+      <div className="flex flex-col">
+        <p className=" font-semibold text-3xl text-transparent bg-clip-text animate-lightSpeed bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500 bg-[length:300%_100%] pb-5 text-center">
           Welcome to {roomName} room !
         </p>
         <div className="flex">
