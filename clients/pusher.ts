@@ -8,6 +8,7 @@ const pusher = new Pusher((process.env.PUSHER_API_KEY as string) ?? '3ae50928498
 
 function startInactivityCheck() {
   timeoutId = window.setTimeout(function () {
+    console.log('inactivity detected');
     pusher.disconnect();
   }, 2 * 60 * 1000); // called after 5 minutes
 }
@@ -17,7 +18,6 @@ function userActivityDetected() {
   if (timeoutId !== null) {
     window.clearTimeout(timeoutId);
   }
-
   startInactivityCheck();
 }
 

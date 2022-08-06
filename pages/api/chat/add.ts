@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { roomName, message, userName, avatar } = body;
 
-  const r = await pusher?.trigger(`presence-cache-${roomName}`, 'new-message', {
+  const r = await pusher?.trigger(`cache-${roomName}`, 'new-message', {
     message,
     userName,
     avatar,
