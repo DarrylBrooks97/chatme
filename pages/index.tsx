@@ -26,7 +26,7 @@ const Index: NextPage = () => {
   return (
     <div className="flex justify-center items-center h-screen min-w-7xl">
       <div className="flex flex-col text-center">
-        <h1 className="text-6xl p-1 font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500">
+        <h1 className="text-6xl p-1 font-bold text-transparent bg-clip-text animate-lightSpeed bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500 bg-[length:300%_100%]">
           Chat me
         </h1>
         <h2 className="text-xl p-3 font-medium text-slate-400">
