@@ -19,8 +19,8 @@ const Header = (props: { user: User | null }) => {
           {props.user ? 'Sign out' : 'Sign in'}
         </button>
         {props.user && (
-          <div className="flex items-center rounded-full overflow-hidden ml-2">
-            <img className="w-full h-full" src={props.user.user_metadata['avatar_url']} />
+          <div className="flex items-center h-[50px] w-[50px] rounded-full overflow-hidden ml-2">
+            <img src={props.user.user_metadata['avatar_url'].replace('_normal', '')} />
           </div>
         )}
       </div>
