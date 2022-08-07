@@ -4,7 +4,7 @@ const Footer = () => {
       <p className="text-white font-light">
         Made with 💚 by{' '}
         <span
-          className="text-green-400"
+          className="text-green-400 cursor-pointer"
           onClick={() => (window.location.href = 'https://www.twitter.com/Apxflex')}
         >
           Apxflex

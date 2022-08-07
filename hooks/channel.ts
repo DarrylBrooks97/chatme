@@ -2,7 +2,7 @@ import { pusher } from '@clients/pusher';
 
 const getOnlineCount = (channel: any) => {
   channel.bind('pusher:subscription_count', (data: { subscription_count: number }) => {
-    document.getElementById('online')!.innerHTML = `${data.subscription_count} online!`;
+    document.getElementById('online')!.innerHTML = `${data.subscription_count} online !`;
   });
 };
 
