@@ -1,4 +1,5 @@
 import { pusher } from '@clients/pusher';
+import { sanitize } from '@utils/index';
 
 const getOnlineCount = (channel: any) => {
   channel.bind('pusher:subscription_count', (data: { subscription_count: number }) => {
@@ -7,7 +8,7 @@ const getOnlineCount = (channel: any) => {
 };
 
 const joinRoom = (channelName: string, fn: (t: any) => void) => {
-  const channel = pusher.subscribe(`cache-${channelName}`);
+  const channel = pusher.subscribe(`cache-${sanitize(channelName)}`);
   getOnlineCount(channel);
 
   return channel.bind('new-message', (data: any) => {
@@ -16,7 +17,7 @@ const joinRoom = (channelName: string, fn: (t: any) => void) => {
 };
 
 const leaveRoom = (channelName: string) => {
-  pusher.unsubscribe(`cache-${channelName}`);
+  pusher.unsubscribe(`cache-${sanitize(channelName)}`);
 };
 
 export { joinRoom, leaveRoom };

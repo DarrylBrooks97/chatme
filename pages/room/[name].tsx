@@ -6,8 +6,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
 import { userActivityDetected } from '@clients/pusher';
 
-let roomClient: Channel | null = null;
-
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
   const { user } = await getUser(ctx);
@@ -66,7 +64,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
   };
 
   useEffect(() => {
-    roomClient = joinRoom(roomName, data => {
+    joinRoom(roomName, data => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });

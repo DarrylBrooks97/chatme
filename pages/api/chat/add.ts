@@ -1,5 +1,6 @@
 import Pusher from 'pusher';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { sanitize } from '@utils/index';
 
 const allowedOrigins = [`https://chatme-xi.vercel.app`, 'http://localhost:3000/'];
 
@@ -31,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { roomName, message, userName, avatar } = body;
 
-  const r = await pusher?.trigger(`cache-${roomName}`, 'new-message', {
+  const r = await pusher?.trigger(`cache-${sanitize(roomName)}`, 'new-message', {
     message,
     userName,
     avatar,
