@@ -7,7 +7,7 @@ const Layout = (props: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col min-h-screen w-screen">
       <Header user={user} />
-      <main className="grow mx-auto flex justify-center items-center max-w-7xl">
+      <main className="grow mx-auto flex justify-center items-center max-w-7xl w-full">
         {props.children}
       </main>
       <Footer />

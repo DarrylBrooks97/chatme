@@ -54,7 +54,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
         roomName: props.roomName,
         message: newMessage,
         userName: user.user_metadata['preferred_username'],
-        avatar: user.user_metadata['avatar_url'],
+        avatar: user.user_metadata['avatar_url'].replace('_normal', ''),
       }),
     });
 
@@ -77,7 +77,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
   }, []);
 
   return (
-    <div className="flex flex-col p-3">
+    <div className="flex flex-col p-3 w-full md:w-[50vw]">
       <p className="break-words font-semibold text-3xl text-transparent bg-clip-text animate-lightSpeed bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500 bg-[length:650%_100%] pb-5 text-center">
         Welcome to {roomName} room !
       </p>
@@ -85,10 +85,10 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
         <div className="h-[10px] w-[10px] bg-green-300 rounded-full animate-ping self-center" />
         <p className="text-white ml-3" id="online"></p>
       </div>
-      <div className=" bg-white rounded-lg overflow-y-scroll h-96 w-full">
+      <div className="bg-white md:w-full w-full rounded-lg overflow-y-scroll overflow-x-hidden h-96">
         {messages?.map(message => (
-          <div className="flex p-3 border-b-2" key={message.time}>
-            <div className="rounded-full h-[60px] w-[60px] overflow-hidden">
+          <div className="flex p-3 border-b-2 md:grow w-full" key={message.time}>
+            <div className="h-[50px] rounded-full w-[50px] overflow-hidden">
               <img
                 src={message.avatar}
                 alt={`avatar @ ${message.time}`}
@@ -96,9 +96,9 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
                 onClick={() => window.open(`https://twitter.com/${message.userName}`, '_blank')}
               />
             </div>
-            <div className="w-full break-words self-center">
+            <div className="md:w-full w-[300px] grow md:grow-0 break-words self-center">
               <p className="text-sm text-purple-500 ml-3">@{message.userName}</p>
-              <p className="text-gray-800 text-sm  ml-3">{message.message}</p>
+              <p className="text-gray-800 text-sm ml-3">{message.message}</p>
               <time className="text-xs text-gray-500 float-right">
                 {formatDistanceToNow(new Date(message.time))} ago
               </time>
