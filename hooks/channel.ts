@@ -1,5 +1,5 @@
-import { pusher } from '@clients/pusher';
 import { sanitize } from '@utils/index';
+import Pusher from 'pusher-js';
 
 const getOnlineCount = (channel: any) => {
   channel.bind('pusher:subscription_count', (data: { subscription_count: number }) => {
@@ -7,7 +7,10 @@ const getOnlineCount = (channel: any) => {
   });
 };
 
-const joinRoom = (channelName: string, fn: (t: any) => void) => {
+const joinRoom = (
+  { pusher, channelName }: { pusher: Pusher; channelName: string },
+  fn: (t: any) => void,
+) => {
   const channel = pusher.subscribe(`cache-${sanitize(channelName)}`);
   getOnlineCount(channel);
 
@@ -16,7 +19,7 @@ const joinRoom = (channelName: string, fn: (t: any) => void) => {
   });
 };
 
-const leaveRoom = (channelName: string) => {
+const leaveRoom = ({ pusher, channelName }: { pusher: Pusher; channelName: string }) => {
   pusher.unsubscribe(`cache-${sanitize(channelName)}`);
 };
 

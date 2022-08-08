@@ -1,10 +1,10 @@
-import { Channel } from 'pusher-js';
 import { GetServerSidePropsContext } from 'next';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
 import { userActivityDetected } from '@clients/pusher';
+import { PusherContext } from '@contexts/pusher';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -15,13 +15,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       Location: '/',
     });
     res.end();
-    return { props: { roomName: null } };
+    return { props: { channelName: null } };
   }
 
   return {
     props: {
       user,
-      roomName: query.name,
+      channelName: query.name,
     },
   };
 };
@@ -32,8 +32,9 @@ export interface RoomMessage {
   time: string;
 }
 
-const ChatRoom = (props: { user: User; roomName: string }) => {
-  const { user, roomName } = props;
+const ChatRoom = (props: { user: User; channelName: string }) => {
+  const { user, channelName } = props;
+  const pusher = useContext(PusherContext);
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<RoomMessage[]>([]);
 
@@ -49,7 +50,7 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        roomName: props.roomName,
+        roomName: props.channelName,
         message: newMessage,
         userName: user.user_metadata['preferred_username'],
         avatar: user.user_metadata['avatar_url'].replace('_normal', ''),
@@ -60,24 +61,24 @@ const ChatRoom = (props: { user: User; roomName: string }) => {
       alert('Error sending message');
       return;
     }
-    userActivityDetected();
+    userActivityDetected(pusher);
   };
 
   useEffect(() => {
-    joinRoom(roomName, data => {
+    joinRoom({ pusher, channelName }, data => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
 
     return () => {
-      leaveRoom(roomName);
+      leaveRoom({ pusher, channelName });
     };
   }, []);
 
   return (
     <div className="flex flex-col p-3 w-full md:w-[50vw]">
       <p className="break-words font-semibold text-3xl text-transparent bg-clip-text animate-lightSpeed bg-gradient-to-r from-cyan-500 via-pink-500 to-cyan-500 bg-[length:650%_100%] pb-5 text-center">
-        Welcome to {roomName} room !
+        Welcome to {channelName} room !
       </p>
       <div className="flex">
         <div className="h-[10px] w-[10px] bg-green-300 rounded-full animate-ping self-center" />

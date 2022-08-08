@@ -2,7 +2,6 @@ import type { NextPage } from 'next';
 import { useUser } from '@supabase/auth-helpers-react';
 import { login } from 'hooks/supbase';
 import { useEffect } from 'react';
-import { pusher } from '@clients/pusher';
 
 const Index: NextPage = () => {
   const { user } = useUser();
