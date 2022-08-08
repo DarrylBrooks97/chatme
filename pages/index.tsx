@@ -38,7 +38,7 @@ const Index: NextPage = () => {
         A quick chat app to talk to friends, family, and randoms in real time.
       </h2>
       <div className="flex flex-col text-center p-3">
-        <p className="text-white text-xl p-3">Pick a room to chat !</p>
+        <p className="text-white text-xl p-3">Enter a room name to chat in !</p>
         <form action="POST" onSubmit={submitRoom}>
           <input name="roomName" className="rounded-md p-3 mr-3 bg-white text-black" />
           <button
@@ -56,7 +56,7 @@ const Index: NextPage = () => {
         </button>
       </div>
       {/* <div className="flex flex-col">
-        {channels.map(channel => (
+        {channels?.map((channel: any) => (
           <div className="flex p-3 border-b-2" key={channel.name}>
             <div className="flex-1">
               <p className="text-sm text-gray-600">{channel.name}</p>

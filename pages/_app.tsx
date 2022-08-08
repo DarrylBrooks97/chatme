@@ -8,34 +8,34 @@ import { PusherProvider } from '@contexts/pusher';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider supabaseClient={supabaseClient}>
-      <DefaultSeo
-        title="Chatme 👋🏾"
-        openGraph={{
-          type: 'website',
-          url: 'https://chatme-xi.vercel.app/',
-          site_name: 'Chatme 👋🏾',
-          description: 'A quick chat app to talk to friends, family, and randoms in real time.',
-          images: [
-            {
-              url: 'https://chatme-xi.vercel.app/SEO.png',
-              width: 800,
-              height: 450,
-              alt: 'Chatme',
-            },
-          ],
-        }}
-        twitter={{
-          handle: '@apxflex',
-          cardType: 'summary_large_image',
-        }}
-      />
-      <PusherProvider>
+    <PusherProvider>
+      <UserProvider supabaseClient={supabaseClient}>
+        <DefaultSeo
+          title="Chatme 👋🏾"
+          openGraph={{
+            type: 'website',
+            url: 'https://chatme-xi.vercel.app/',
+            site_name: 'Chatme 👋🏾',
+            description: 'A quick chat app to talk to friends, family, and randoms in real time.',
+            images: [
+              {
+                url: 'https://chatme-xi.vercel.app/SEO.png',
+                width: 800,
+                height: 450,
+                alt: 'Chatme',
+              },
+            ],
+          }}
+          twitter={{
+            handle: '@apxflex',
+            cardType: 'summary_large_image',
+          }}
+        />
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </PusherProvider>
-    </UserProvider>
+      </UserProvider>
+    </PusherProvider>
   );
 }
 
