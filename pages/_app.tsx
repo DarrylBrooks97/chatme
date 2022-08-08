@@ -4,6 +4,7 @@ import { UserProvider } from '@supabase/auth-helpers-react';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import Layout from '@components/Layout';
 import { DefaultSeo } from 'next-seo';
+import { PusherProvider } from '@contexts/pusher';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -29,9 +30,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: 'summary_large_image',
         }}
       />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <PusherProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </PusherProvider>
     </UserProvider>
   );
 }
