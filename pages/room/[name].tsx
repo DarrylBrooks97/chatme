@@ -1,10 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { joinRoom, leaveRoom } from 'hooks/channel';
 import { formatDistanceToNow } from 'date-fns';
 import { getUser, User } from '@supabase/auth-helpers-nextjs';
 import { userActivityDetected } from '@clients/pusher';
-import { PusherContext } from '@contexts/pusher';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, query } = ctx;
@@ -34,7 +33,6 @@ export interface RoomMessage {
 
 const ChatRoom = (props: { user: User; channelName: string }) => {
   const { user, channelName } = props;
-  const pusher = useContext(PusherContext);
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<RoomMessage[]>([]);
 
@@ -61,17 +59,18 @@ const ChatRoom = (props: { user: User; channelName: string }) => {
       alert('Error sending message');
       return;
     }
-    userActivityDetected(pusher);
+    userActivityDetected();
   };
 
   useEffect(() => {
-    joinRoom({ pusher, channelName }, data => {
+    joinRoom(channelName, data => {
       setMessages(prevMessages => [...prevMessages, data]);
       setNewMessage('');
     });
+    console.log('joined room');
 
     return () => {
-      leaveRoom({ pusher, channelName });
+      leaveRoom(channelName);
     };
   }, []);
 

@@ -5,7 +5,6 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
-      "@contexts/*": ["contexts/*"],
       "@clients/*": ["clients/*"],
       "@utils/*": ["utils/*"]
     },

@@ -2,7 +2,12 @@ import Pusher from 'pusher-js';
 
 var timeoutId: number | null = null;
 
-function startInactivityCheck(pusher: Pusher) {
+const pusher = new Pusher((process.env.PUSHER_API_KEY as string) ?? '3ae509284984f174da5c', {
+  cluster: (process.env.PUSHER_CLUSTER as string) ?? 'us2',
+});
+console.log('Pusher client created');
+
+function startInactivityCheck() {
   timeoutId = window.setTimeout(function () {
     console.log('inactivity detected');
     pusher.disconnect();
@@ -11,11 +16,11 @@ function startInactivityCheck(pusher: Pusher) {
 }
 
 // called by something that detects user activity
-function userActivityDetected(pusher: Pusher) {
+function userActivityDetected() {
   if (timeoutId !== null) {
     window.clearTimeout(timeoutId);
   }
-  startInactivityCheck(pusher);
+  startInactivityCheck();
 }
 
-export { startInactivityCheck, userActivityDetected };
+export { pusher, startInactivityCheck, userActivityDetected };
