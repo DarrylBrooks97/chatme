@@ -73,6 +73,7 @@ const ChatRoom = (props: { user: User; channelName: string }) => {
       leaveRoom(channelName);
     };
   }, []);
+  console.log('testing');
 
   return (
     <div className="flex flex-col p-3 w-full md:w-[50vw]">
