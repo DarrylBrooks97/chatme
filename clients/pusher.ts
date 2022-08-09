@@ -5,7 +5,6 @@ var timeoutId: number | null = null;
 const pusher = new Pusher((process.env.PUSHER_API_KEY as string) ?? '3ae509284984f174da5c', {
   cluster: (process.env.PUSHER_CLUSTER as string) ?? 'us2',
 });
-console.log('Pusher client created');
 
 function startInactivityCheck() {
   timeoutId = window.setTimeout(function () {
